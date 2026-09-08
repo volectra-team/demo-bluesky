@@ -1,0 +1,8 @@
+{
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+        "text": "Gunakan format Conventional Commits DAN tambahkan Gitmoji yang sesuai di antara tipe commit dan deskripsinya. Contoh format: 'feat✨:  add login validation' atau 'fix🐛:  fix endpoint bug'. Gunakan emoji yang umum seperti: ✨ untuk feat, 🐛 untuk fix, 📝 untuk docs, ⚡️ untuk perf, 🎨 untuk style/ui, dan 🔧 untuk chore."
+    }
+]
+
+}

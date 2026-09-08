@@ -37,7 +37,16 @@
     .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     ::selection { background: #E5E7EB; }
     details summary::-webkit-details-marker { display: none; }
+    .three-wrap{position:relative;overflow:hidden;background:#f8fafc}
+    .three-wrap canvas{display:block;width:100%;height:100%}
+    .three-label{position:absolute;left:12px;bottom:12px;background:rgba(17,24,39,.88);color:#fff;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:.04em;pointer-events:none}
+    .three-hint{position:absolute;right:12px;bottom:12px;background:rgba(255,255,255,.92);border:1px solid #e2e8f0;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:600;color:#334155;pointer-events:none}
+    .three-dots{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:6px}
+    .three-dots button{width:7px;height:7px;border-radius:999px;background:#cbd5e1;border:0;padding:0;cursor:pointer;transition:all .2s}
+    .three-dots button.active{background:#0f172a;width:20px}
   </style>
+  <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+  <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"LodgingBusiness","name":"Blue Sky Kost","address":{"@type":"PostalAddress","addressLocality":"Jakarta Selatan","addressRegion":"DKI Jakarta","addressCountry":"ID"},"telephone":"+6287888669113","priceRange":"Rp850000 - Rp1850000"}
   </script>
@@ -97,16 +106,25 @@
         </div>
         <div class="lg:col-span-5">
           <div class="border border-slate-200 rounded-2xl overflow-hidden bg-white">
-            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop" alt="Kamar Standard 3x4 Blue Sky" class="w-full h-[280px] md:h-[320px] object-cover" loading="eager">
+            <div class="three-wrap h-[320px] md:h-[360px]" id="wrap-hero">
+              <canvas id="canvas-hero"></canvas>
+              <div class="three-label" id="label-hero">GEDUNG • DRAG UNTUK PUTAR</div>
+              <div class="three-hint hidden sm:block">drag / scroll zoom</div>
+              <div class="three-dots" id="dots-hero">
+                <button class="active" data-idx="0" aria-label="View 1"></button>
+                <button data-idx="1" aria-label="View 2"></button>
+                <button data-idx="2" aria-label="View 3"></button>
+              </div>
+            </div>
             <div class="p-5 flex items-center justify-between gap-4">
               <div>
-                <div class="text-[13px] font-semibold">Standard 3×4 m</div>
-                <div class="text-[13px] text-slate-500 mt-0.5">Rp 850.000/bln • Sisa 2 • Deposit 1 bln</div>
+                <div class="text-[13px] font-semibold" id="hero-title">Isometrik Gedung — 07.00</div>
+                <div class="text-[13px] text-slate-500 mt-0.5" id="hero-sub">20 kamar • 2 lantai • -6.186, 106.800</div>
               </div>
-              <a href="https://wa.me/6287888669113?text=Halo%20Blue%20Sky%2C%20booking%20Standard%203x4" target="_blank" class="shrink-0 bg-slate-900 text-white px-4 py-2.5 rounded-lg text-[13px] font-semibold hover:bg-black">Booking</a>
+              <button id="hero-next" class="shrink-0 bg-slate-900 text-white px-4 py-2.5 rounded-lg text-[13px] font-semibold hover:bg-black">Ganti view</button>
             </div>
           </div>
-          <p class="text-[12px] text-slate-500 mt-3">Foto asli tanpa filter. Video 360° tersedia via WhatsApp.</p>
+          <p class="text-[12px] text-slate-500 mt-3">Model 3D low-poly — geser untuk orbit. Foto asli tetap ada di <a href="#rooms" class="underline underline-offset-4 font-semibold">Kamar</a>.</p>
         </div>
       </div>
     </div>
@@ -148,6 +166,28 @@
           <h2 class="text-[30px] md:text-[36px] font-bold tracking-tight leading-tight mt-2">Pilih sesuai kebutuhan.</h2>
         </div>
         <p class="text-[14px] text-slate-600 max-w-[38ch]">Semua harga nett. Listrik token sendiri. Air & WiFi termasuk.</p>
+      </div>
+      <div class="fade-in rounded-2xl overflow-hidden border border-slate-200 bg-white mb-6">
+        <div class="grid md:grid-cols-[1.45fr_.85fr]">
+          <div class="three-wrap h-[300px] md:h-[360px] bg-[#f1f5f9]" id="wrap-room">
+            <canvas id="canvas-room"></canvas>
+            <div class="three-label" id="label-room">CUTAWAY 3×4 — DELUXE</div>
+            <div class="three-hint hidden sm:block">drag orbit</div>
+          </div>
+          <div class="p-5 md:p-6 flex flex-col justify-center gap-4 bg-white border-t md:border-t-0 md:border-l border-slate-200">
+            <div>
+              <div class="text-[11px] font-bold tracking-widest text-slate-500">3D CUTAWAY • TAP TIPE</div>
+              <div class="text-[15px] font-bold mt-1" id="room-name">Deluxe 3×4 — KM dalam</div>
+              <div class="text-[13px] text-slate-600" id="room-desc">Kamar mandi dalam + shower panas. Jendela luar.</div>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <button data-room="standard" class="room-btn py-2.5 rounded-lg border border-slate-200 text-[13px] font-semibold hover:border-slate-900">Standard</button>
+              <button data-room="deluxe" class="room-btn py-2.5 rounded-lg bg-slate-900 text-white text-[13px] font-semibold">Deluxe</button>
+              <button data-room="premium" class="room-btn py-2.5 rounded-lg border border-slate-200 text-[13px] font-semibold hover:border-slate-900">Premium</button>
+            </div>
+            <div class="text-[12px] text-slate-500" id="room-meta">AC • WiFi 100 Mbps • 12 m² • geser model untuk lihat layout</div>
+          </div>
+        </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="room-card bg-white rounded-2xl overflow-hidden border border-slate-200 fade-in flex flex-col">
@@ -232,6 +272,18 @@
         <h2 class="text-[26px] md:text-[30px] font-bold tracking-tight">Kata penghuni.</h2>
         <div class="hidden md:block text-[13px] text-slate-500">4.8/5 dari 37 ulasan Google</div>
       </div>
+      <div class="fade-in rounded-2xl overflow-hidden border border-slate-200 bg-white mb-6 grid md:grid-cols-[1.15fr_.85fr]">
+        <div class="three-wrap h-[280px] md:h-[320px] bg-[#f8fafc]" id="wrap-people">
+          <canvas id="canvas-people"></canvas>
+          <div class="three-label">RUANG KOMUNAL • WFH & NONGKRONG</div>
+        </div>
+        <div class="p-6 flex flex-col justify-center border-t md:border-t-0 md:border-l border-slate-200">
+          <div class="text-[11px] font-bold tracking-widest text-slate-500">KOMUNITAS</div>
+          <div class="text-[18px] font-bold tracking-tight mt-1 leading-tight">Dihuni karyawan, mahasiswa, freelancer.</div>
+          <p class="text-[13px] text-slate-600 mt-2">Ruang komunal kepakai harian — drag model untuk lihat meja kerja & pantry.</p>
+          <div class="flex flex-wrap gap-2 mt-4 text-[11px] font-semibold"><span class="px-2.5 py-1 rounded-full bg-slate-900 text-white">SCBD 15′</span><span class="px-2.5 py-1 rounded-full border border-slate-200">UI Depok</span><span class="px-2.5 py-1 rounded-full border border-slate-200">WFH friendly</span></div>
+        </div>
+      </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div class="fade-in bg-slate-50 p-6 rounded-xl border border-slate-200">
           <div class="text-[13px] font-semibold">★★★★★ <span class="font-normal text-slate-500 ml-1">Andi S. • UI • 11 bulan</span></div>
@@ -278,16 +330,34 @@
   </section>
 
   <section id="faq" class="py-16 md:py-20 bg-slate-50 border-t border-slate-200">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <div class="text-center fade-in">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center fade-in max-w-3xl mx-auto">
         <p class="text-[12px] font-semibold tracking-widest uppercase text-slate-500">FAQ</p>
         <h2 class="text-[28px] font-bold tracking-tight mt-2">Sering ditanya.</h2>
       </div>
-      <div class="mt-8 space-y-3 fade-in">
+      <div class="grid lg:grid-cols-[1.7fr_.9fr] gap-6 mt-8 max-w-5xl mx-auto">
+        <div class="space-y-3 fade-in">
         <details class="bg-white border border-slate-200 rounded-xl p-5"><summary class="flex items-center justify-between cursor-pointer font-semibold text-[14px]">Bisa untuk pasutri? <span>+</span></summary><p class="text-[14px] text-slate-600 mt-3">Bisa (Premium) +Rp 300rb/bulan. Belum bisa untuk anak.</p></details>
         <details class="bg-white border border-slate-200 rounded-xl p-5"><summary class="flex items-center justify-between cursor-pointer font-semibold text-[14px]">Listrik & air? <span>+</span></summary><p class="text-[14px] text-slate-600 mt-3">Token per kamar (Rp 80–150rb/bln). Air & WiFi termasuk.</p></details>
         <details class="bg-white border border-slate-200 rounded-xl p-5"><summary class="flex items-center justify-between cursor-pointer font-semibold text-[14px]">Deposit kembali kapan? <span>+</span></summary><p class="text-[14px] text-slate-600 mt-3">Kembali H+7 setelah check-out, tanpa kerusakan.</p></details>
         <details class="bg-white border border-slate-200 rounded-xl p-5"><summary class="flex items-center justify-between cursor-pointer font-semibold text-[14px]">Boleh survei malam? <span>+</span></summary><p class="text-[14px] text-slate-600 mt-3">Boleh sampai 21.00.</p></details>
+        </div>
+        <div class="fade-in rounded-2xl overflow-hidden border border-slate-200 bg-white">
+          <div class="three-wrap h-[280px] lg:h-[360px] bg-[#0f172a]" id="wrap-faq">
+            <canvas id="canvas-faq"></canvas>
+            <div class="three-label">TOTEM INFO • AUTO-PUTAR</div>
+          </div>
+          <div class="p-5">
+            <div class="text-[13px] font-bold">4 topik paling ditanya</div>
+            <div class="flex flex-wrap gap-2 mt-3 text-[11px] font-semibold">
+              <button data-faq="0" class="faq-chip px-2.5 py-1.5 rounded-full bg-slate-900 text-white">Pasutri</button>
+              <button data-faq="1" class="faq-chip px-2.5 py-1.5 rounded-full border border-slate-200">Listrik</button>
+              <button data-faq="2" class="faq-chip px-2.5 py-1.5 rounded-full border border-slate-200">Deposit</button>
+              <button data-faq="3" class="faq-chip px-2.5 py-1.5 rounded-full border border-slate-200">Survei</button>
+            </div>
+            <div class="text-[13px] text-slate-600 mt-3" id="faq-3d-desc">Premium bisa pasutri +Rp 300rb. Klik chip untuk sorot kubus.</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -346,6 +416,220 @@
     mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { menuOpen=false; mobileMenu.classList.add('hidden'); }));
     const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting) e.target.classList.add('visible')}),{threshold:0.1});
     document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    const DPR=Math.min(devicePixelRatio,1.8);
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function mkRenderer(canvas,alpha=false){
+      const r=new THREE.WebGLRenderer({canvas,antialias:true,alpha,preserveDrawingBuffer:false,powerPreference:'high-performance'});
+      r.setPixelRatio(DPR); r.shadowMap.enabled=true; r.shadowMap.type=THREE.PCFSoftShadowMap;
+      r.outputColorSpace=THREE.SRGBColorSpace; return r;
+    }
+    function onResize(renderer,camera,wrap){
+      const w=wrap.clientWidth,h=wrap.clientHeight;
+      camera.aspect=w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h,false);
+    }
+    function addLights(scene,opts={}){
+      scene.add(new THREE.HemisphereLight(0xffffff,0xe2e8f0,opts.hemi??0.9));
+      const sun=new THREE.DirectionalLight(0xffffff,1.1); sun.position.set(4,7,3); sun.castShadow=true;
+      sun.shadow.mapSize.set(1024,1024); sun.shadow.camera.near=0.5; sun.shadow.camera.far=20; scene.add(sun);
+      const fill=new THREE.DirectionalLight(0xcbd5e1,0.5); fill.position.set(-4,3,-4); scene.add(fill);
+      return sun;
+    }
+    function mat(color,rough=0.85){ return new THREE.MeshStandardMaterial({color,roughness:rough,metalness:0.02}); }
+    function box(w,h,d,color){ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(color)); m.castShadow=true; m.receiveShadow=true; return m; }
+
+    ;(()=>{
+      const wrap=document.getElementById('wrap-hero'),canvas=document.getElementById('canvas-hero');
+      if(!wrap||!canvas) return;
+      const scene=new THREE.Scene(); scene.background=new THREE.Color(0xf8fafc);
+      const camera=new THREE.PerspectiveCamera(38,1,0.1,100); camera.position.set(7.5,5.2,7.5);
+      const renderer=mkRenderer(canvas); addLights(scene);
+      scene.add(new THREE.GridHelper(10,10,0xe2e8f0,0xf1f5f9));
+      const ground=box(10,0.08,10,0xffffff); ground.position.y=-0.04; scene.add(ground);
+      const grp=new THREE.Group(); scene.add(grp);
+      const plinth=box(6.6,0.22,3.6,0xe2e8f0); plinth.position.y=0.11; grp.add(plinth);
+      const building=box(6,2.4,2.6,0xffffff); building.position.y=1.42; grp.add(building);
+      const roof=box(6.2,0.14,2.9,0x0f172a); roof.position.y=2.72; grp.add(roof);
+      const slab=box(6.05,0.08,2.65,0xcbd5e1); slab.position.y=1.42; grp.add(slab);
+      for(let f=0;f<2;f++){ for(let i=0;i<5;i++){
+        const win=box(0.72,0.62,0.06, f===0?0x38bdf8:0xfbbf24); win.position.set(-2.2+i*1.1, f?1.95:0.9, 1.33);
+        if(i===2&&f===0){ win.material=mat(0x0f172a); win.scale.set(1.15,1.35,1); }
+        grp.add(win);
+        const winB=win.clone(); winB.position.z=-1.33; grp.add(winB);
+      }}
+      const door=box(0.7,1.05,0.07,0x1e293b); door.position.set(-2.2,0.62,1.34); grp.add(door);
+      const sign=box(0.95,0.22,0.04,0x0f172a); sign.position.set(-2.2,1.45,1.36); grp.add(sign);
+      const acs=[-1.1,0,1.1,2.2].map(x=>{const a=box(0.28,0.14,0.1,0xf1f5f9); a.position.set(x,2.15,1.36); grp.add(a); return a;});
+      const tree=(x,z,s=1)=>{ const t=new THREE.Group(); const trunk=box(0.12*s,0.5*s,0.12*s,0x92400e); trunk.position.y=0.25*s; const crown=new THREE.Mesh(new THREE.SphereGeometry(0.35*s,10,8),mat(0x22c55e,0.9)); crown.position.y=0.75*s; t.add(trunk,crown); t.position.set(x,0.11,z); grp.add(t); };
+      tree(-3.6,1.2,1); tree(3.6,1.35,0.9); tree(3.3,-1.4,0.85);
+      const road=box(10,0.02,1.1,0x334155); road.position.set(0,0.01,2.9); scene.add(road);
+      const controls=new OrbitControls(camera,renderer.domElement);
+      controls.target.set(0,1.2,0); controls.enableDamping=true; controls.dampingFactor=0.06; controls.minDistance=4; controls.maxDistance=14; controls.maxPolarAngle=Math.PI/2.05; controls.update();
+      onResize(renderer,camera,wrap); addEventListener('resize',()=>onResize(renderer,camera,wrap));
+      const titles=['Isometrik gedung — 07.00','Fasad depan — lobby & CCTV','Denah lantai — 20 kamar'];
+      const subs=['20 kamar • 2 lantai • -6.186, 106.800','Akses 500m stasiun • parkiR motor 1:1','Deluxe paling dicari — sisa 1'];
+      let idx=0,auto;
+      function apply(i){
+        idx=(i+3)%3; const t=document.getElementById('hero-title'), s=document.getElementById('hero-sub');
+        if(t) t.textContent=titles[idx]; if(s) s.textContent=subs[idx];
+        document.querySelectorAll('#dots-hero button').forEach(b=>b.classList.toggle('active',+b.dataset.idx===idx));
+        document.getElementById('label-hero').textContent=['GEDUNG • DRAG UNTUK PUTAR','FASAD • CCTV 24 JAM','DENAH • TAP GANTI VIEW'][idx];
+        const cam=[[7.5,5.2,7.5],[0.2,2.8,6.8],[0,8.2,0.2]][idx];
+        const tgt=[[0,1.2,0],[0,1.2,0],[0,0.6,0]][idx];
+        const t0={x:camera.position.x,y:camera.position.y,z:camera.position.z}, g={x:tgt[0],y:tgt[1],z:tgt[2]};
+        let k=0; (function tween(){k+=0.06; camera.position.set(t0.x+(cam[0]-t0.x)*k,t0.y+(cam[1]-t0.y)*k,t0.z+(cam[2]-t0.z)*k); controls.target.lerp(new THREE.Vector3(g.x,g.y,g.z),0.12); if(k<1) requestAnimationFrame(tween);})();
+      }
+      document.getElementById('hero-next')?.addEventListener('click',()=>apply(idx+1));
+      document.querySelectorAll('#dots-hero button').forEach(b=>b.addEventListener('click',()=>apply(+b.dataset.idx)));
+      let spin=0; function startAuto(){ if(reduced) return; auto=setInterval(()=>{ if(!document.hidden && wrap.getBoundingClientRect().top<innerHeight) apply(idx+1); },3800); }
+      startAuto(); wrap.addEventListener('pointerdown',()=>{clearInterval(auto);},{once:true});
+      let vis=true; new IntersectionObserver(e=>vis=e[0].isIntersecting,{threshold:0.05}).observe(wrap);
+      (function loop(){ requestAnimationFrame(loop); if(!vis) return; if(!controls.manual) grp.rotation.y+=0.0006; spin+=0.001; controls.update(); renderer.render(scene,camera); })();
+      controls.addEventListener('start',()=>controls.manual=true);
+      apply(0);
+    })();
+
+    ;(()=>{
+      const wrap=document.getElementById('wrap-room'),canvas=document.getElementById('canvas-room');
+      if(!wrap||!canvas) return;
+      const scene=new THREE.Scene(); scene.background=new THREE.Color(0xf1f5f9);
+      const camera=new THREE.PerspectiveCamera(36,1,0.1,100); camera.position.set(4.8,3.6,4.2);
+      const renderer=mkRenderer(canvas); const sun=addLights(scene,{hemi:0.95});
+      const controls=new OrbitControls(camera,renderer.domElement);
+      controls.target.set(0,0.55,0); controls.enableDamping=true; controls.maxPolarAngle=Math.PI/2.02; controls.minDistance=2.2; controls.maxDistance=9; controls.update();
+      onResize(renderer,camera,wrap); addEventListener('resize',()=>onResize(renderer,camera,wrap));
+      let group=new THREE.Group(); scene.add(group);
+      function build(type){
+        group.clear();
+        const floorColor=type==='premium'?0xfef3c7:0xffffff;
+        const isLarge=type==='premium';
+        const W=isLarge?4:3, D=isLarge?5:4, H=2.15;
+        const floor=box(W,0.06,D,0xe2e8f0); floor.position.y=0; group.add(floor);
+        const wood=box(W-0.12,0.02,D-0.12, floorColor); wood.position.y=0.04; group.add(wood);
+        const wallMat=mat(0xffffff,0.95);
+        const back=new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.08),wallMat); back.position.set(0,H/2,-D/2+0.04); back.receiveShadow=true; group.add(back);
+        const side=new THREE.Mesh(new THREE.BoxGeometry(0.08, H, D),wallMat); side.position.set(-W/2+0.04,H/2,0); side.receiveShadow=true; group.add(side);
+        const bed=box(1.18,0.32,2.02,0x0f172a); bed.position.set(-W/2+0.78,0.22,-D/2+1.1); group.add(bed);
+        const bedHead=box(1.18,0.45,0.08,0x334155); bedHead.position.set(-W/2+0.78,0.5,-D/2+0.16); group.add(bedHead);
+        const sheets=box(1.1,0.08,1.9,0xf8fafc); sheets.position.set(-W/2+0.78,0.41,-D/2+1.12); group.add(sheets);
+        const desk=box(1.0,0.45,0.52,0xffffff); desk.position.set(W/2-0.65,0.26,D/2-0.7); group.add(desk);
+        const chair=box(0.42,0.48,0.42,0x38bdf8); chair.position.set(W/2-0.65,0.27,D/2-1.28); group.add(chair);
+        const lemari=box(0.6,1.35,0.45,0xcbd5e1); lemari.position.set(W/2-0.42,0.71,-D/2+0.85); group.add(lemari);
+        const ac=box(0.62,0.16,0.12,0xf1f5f9); ac.position.set(0, H-0.22, -D/2+0.12); group.add(ac);
+        const win=box(0.9,0.7,0.06,0xbae6fd); win.position.set(-W/2+0.04,1.0,0.2); win.rotation.y=Math.PI/2; group.add(win);
+        if(type!=='standard'){
+          const bw=1.05, bd=1.55;
+          const bathFloor=box(bw,0.04,bd,0xe0f2fe); bathFloor.position.set(W/2 - bw/2 -0.08,0.05, -D/2 + bd/2 +0.08); group.add(bathFloor);
+          const w1=box(0.06,1.45,bd,0xffffff); w1.position.set(W/2 - bw -0.08,0.76, -D/2 + bd/2+0.08); group.add(w1);
+          const w2=box(bw,1.45,0.06,0xffffff); w2.position.set(W/2 - bw/2 -0.08,0.76, -D/2+0.08); group.add(w2);
+          const closet=box(0.32,0.42,0.42,0xf1f5f9); closet.position.set(W/2 -0.75,0.24, -D/2+0.55); group.add(closet);
+          const shower=box(0.08,1.2,0.08,0x0ea5e9); shower.position.set(W/2 -0.35,0.8, -D/2+1.25); group.add(shower);
+        }
+        if(isLarge){
+          const balkon=box(1.15,0.06,2.2,0xdbeafe); balkon.position.set(W/2+0.62,0.02,0.1); group.add(balkon);
+          const rail=box(0.06,0.55,2.2,0x0f172a); rail.position.set(W/2+1.18,0.34,0.1); group.add(rail);
+          const tv=box(0.06,0.42,0.72,0x020617); tv.position.set(W/2-0.04,0.95, -0.2); tv.rotation.y=Math.PI/2; group.add(tv);
+          const kulkas=box(0.42,0.62,0.42,0xffffff); kulkas.position.set(-W/2+1.65,0.34, -D/2+0.5); group.add(kulkas);
+        }
+        sun.position.set(3,6,4);
+      }
+      build('deluxe');
+      const info={standard:['Standard 3×4 — KM luar','Untuk 1 orang • 12 m² • KM luar bersih harian','AC • WiFi 100 Mbps • 12 m²'], deluxe:['Deluxe 3×4 — KM dalam','Kamar mandi dalam + shower panas. Jendela luar.','AC • WiFi • KM dalam • 12 m²'], premium:['Premium 4×5 — balkon','20,5 m² + balkon • TV 32″ + kulkas mini','Balkon • TV • kulkas • 20.5 m²']};
+      function setRoom(t){
+        build(t);
+        document.querySelectorAll('.room-btn').forEach(b=>{
+          const on=b.dataset.room===t;
+          b.className=on?'room-btn py-2.5 rounded-lg bg-slate-900 text-white text-[13px] font-semibold':'room-btn py-2.5 rounded-lg border border-slate-200 text-[13px] font-semibold hover:border-slate-900';
+        });
+        const n=document.getElementById('room-name'), d=document.getElementById('room-desc'), m=document.getElementById('room-meta'), l=document.getElementById('label-room');
+        if(n) n.textContent=info[t][0]; if(d) d.textContent=info[t][1]; if(m) m.textContent=info[t][2];
+        if(l) l.textContent='CUTAWAY '+(t==='premium'?'4×5':'3×4')+' — '+t.toUpperCase();
+      }
+      document.querySelectorAll('.room-btn').forEach(b=>b.addEventListener('click',()=>setRoom(b.dataset.room)));
+      let vis=true; new IntersectionObserver(e=>vis=e[0].isIntersecting,{threshold:0.05}).observe(wrap);
+      (function loop(){ requestAnimationFrame(loop); if(!vis) return; controls.update(); renderer.render(scene,camera); })();
+    })();
+
+    ;(()=>{
+      const wrap=document.getElementById('wrap-people'),canvas=document.getElementById('canvas-people');
+      if(!wrap||!canvas) return;
+      const scene=new THREE.Scene(); scene.background=new THREE.Color(0xf8fafc);
+      const camera=new THREE.PerspectiveCamera(38,1,0.1,100); camera.position.set(4.2,3.0,4.0);
+      const renderer=mkRenderer(canvas); addLights(scene);
+      const ground=box(6,0.06,4.2,0xffffff); ground.position.y=0; scene.add(ground);
+      const wood=box(5.8,0.02,4.0,0xf1f5f9); wood.position.y=0.04; scene.add(wood);
+      const wallB=box(6,2.0,0.08,0xffffff); wallB.position.set(0,1.0,-2.06); scene.add(wallB);
+      const wallL=box(0.08,2.0,4.2,0xf8fafc); wallL.position.set(-2.96,1.0,0); scene.add(wallL);
+      const pantry=box(2.2,0.72,0.6,0x0f172a); pantry.position.set(1.6,0.4,-1.55); scene.add(pantry);
+      const pantryTop=box(2.25,0.06,0.65,0xe2e8f0); pantryTop.position.set(1.6,0.79,-1.55); scene.add(pantryTop);
+      const fridge=box(0.55,1.15,0.5,0xffffff); fridge.position.set(0.25,0.62,-1.55); scene.add(fridge);
+      const table=box(2.6,0.06,0.95,0xffffff); table.position.set(-0.2,0.74,0.35); scene.add(table);
+      const leg=(x,z)=>{ const l=box(0.06,0.68,0.06,0x0f172a); l.position.set(x,0.38,z); scene.add(l); };
+      leg(-1.3,-0.02); leg(0.9,-0.02); leg(-1.3,0.72); leg(0.9,0.72);
+      for(let i=0;i<4;i++){
+        const x=i<2?-0.9:0.5, z=i%2?0.85:-0.35;
+        const chair=box(0.42,0.12,0.42, i===0?0x38bdf8:0xffffff); chair.position.set(x,0.46,z); scene.add(chair);
+        const chairBack=box(0.42,0.38,0.06,0xcbd5e1); chairBack.position.set(x,0.62,z+(i%2?0.22:-0.22)); scene.add(chairBack);
+      }
+      const laptop=(x,z)=>{ const b=box(0.32,0.02,0.22,0x0f172a); b.position.set(x,0.78,z); scene.add(b); const s=box(0.32,0.22,0.02,0x1e293b); s.position.set(x,0.89,z-0.1); scene.add(s); };
+      laptop(-0.55,0.35); laptop(0.15,0.35);
+      const plant=(x,z)=>{ const pot=box(0.28,0.32,0.28,0xfdba74); pot.position.set(x,0.19,z); scene.add(pot); const leaf=new THREE.Mesh(new THREE.SphereGeometry(0.22,8,6),mat(0x16a34a)); leaf.position.set(x,0.52,z); scene.add(leaf); };
+      plant(-2.55,-1.55); plant(2.6,1.6);
+      const pendant=(x)=>{ const c=new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.22,0.14,12),mat(0xfbbf24)); c.position.set(x,1.85,0.35); scene.add(c); const bulb=new THREE.Mesh(new THREE.SphereGeometry(0.06,8,8),new THREE.MeshStandardMaterial({color:0xfff7ed,emissive:0xfbbf24,emissiveIntensity:0.6})); bulb.position.set(x,1.74,0.35); scene.add(bulb); };
+      pendant(-0.7); pendant(0.35);
+      function person(x,z,c){ const g=new THREE.Group(); const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.16,0.36,4,8),mat(c)); body.position.y=0.68; const head=new THREE.Mesh(new THREE.SphereGeometry(0.14,12,8),mat(0xffedd5)); head.position.y=1.02; g.add(body,head); g.position.set(x,0,z); scene.add(g); return g; }
+      const p1=person(-0.9,1.05,0x0ea5e9), p2=person(0.5,1.05,0xf43f5e), p3=person(1.55,-0.15,0x0f172a);
+      const controls=new OrbitControls(camera,renderer.domElement);
+      controls.target.set(0,0.7,0); controls.enableDamping=true; controls.maxPolarAngle=Math.PI/2.1; controls.minDistance=2.5; controls.maxDistance=8; controls.update();
+      onResize(renderer,camera,wrap); addEventListener('resize',()=>onResize(renderer,camera,wrap));
+      let vis=true; new IntersectionObserver(e=>vis=e[0].isIntersecting,{threshold:0.05}).observe(wrap);
+      let t=0; (function loop(){ requestAnimationFrame(loop); if(!vis) return; t+=0.008; p1.rotation.y=Math.sin(t)*0.15; p2.rotation.y=Math.cos(t*0.9)*0.12; controls.update(); renderer.render(scene,camera); })();
+    })();
+
+    ;(()=>{
+      const wrap=document.getElementById('wrap-faq'),canvas=document.getElementById('canvas-faq');
+      if(!wrap||!canvas) return;
+      const scene=new THREE.Scene(); scene.background=new THREE.Color(0x0f172a);
+      const camera=new THREE.PerspectiveCamera(36,1,0.1,100); camera.position.set(3.8,3.0,4.2);
+      const renderer=mkRenderer(canvas); renderer.setClearColor(0x0f172a,1);
+      scene.add(new THREE.HemisphereLight(0xffffff,0x0f172a,0.9));
+      const dir=new THREE.DirectionalLight(0xffffff,1.2); dir.position.set(3,6,2); scene.add(dir);
+      const amb=new THREE.AmbientLight(0x38bdf8,0.25); scene.add(amb);
+      const floor=new THREE.Mesh(new THREE.CircleGeometry(2.6,32),mat(0x1e293b)); floor.rotation.x=-Math.PI/2; floor.position.y=-0.8; floor.receiveShadow=true; scene.add(floor);
+      const grid=new THREE.GridHelper(6,6,0x334155,0x1e293b); grid.position.y=-0.79; scene.add(grid);
+      const cubes=[]; const colors=[0x38bdf8,0x22c55e,0xfbbf24,0xf43f5e];
+      const labels=['PASUTRI','LISTRIK','DEPOSIT','SURVEI'];
+      for(let i=0;i<4;i++){
+        const g=new THREE.Group(); g.position.set(0,-0.45+i*0.55,0);
+        const m=box(0.95,0.42,0.95,0xffffff); m.material=new THREE.MeshStandardMaterial({color:colors[i],roughness:0.55,metalness:0.08,emissive:colors[i],emissiveIntensity:0.08}); m.castShadow=true; g.add(m);
+        const top=box(0.97,0.04,0.97,0xffffff); top.position.y=0.23; top.material.metalness=0.15; g.add(top);
+        const halo=new THREE.Mesh(new THREE.RingGeometry(0.55,0.62,16),new THREE.MeshBasicMaterial({color:colors[i],transparent:true,opacity:0.18,side:THREE.DoubleSide})); halo.rotation.x=Math.PI/2; halo.position.y=-0.22; g.add(halo);
+        scene.add(g); cubes.push({g,m,halo});
+      }
+      const pivot=new THREE.Group(); cubes.forEach(c=>pivot.add(c.g)); scene.add(pivot);
+      const controls=new OrbitControls(camera,renderer.domElement);
+      controls.target.set(0,0.25,0); controls.enableDamping=true; controls.autoRotate=true; controls.autoRotateSpeed=0.7; controls.minDistance=2.8; controls.maxDistance=9; controls.update();
+      onResize(renderer,camera,wrap); addEventListener('resize',()=>onResize(renderer,camera,wrap));
+      function highlight(i){
+        cubes.forEach((c,idx)=>{
+          const on=idx===i; c.m.material.emissiveIntensity=on?0.42:0.08; c.m.scale.set(on?1.06:1, on?1.06:1, on?1.06:1);
+          c.halo.material.opacity=on?0.38:0.14;
+        });
+        const descs=['Premium bisa pasutri +Rp 300rb/bln. Belum bisa untuk anak.','Token per kamar Rp 80–150rb. Air & WiFi termasuk.','Deposit kembali H+7 tanpa kerusakan.','Survei boleh sampai 21.00, tiap hari.'];
+        document.getElementById('faq-3d-desc').textContent=descs[i];
+        document.querySelectorAll('.faq-chip').forEach((b,idx)=>{
+          b.className=idx===i?'faq-chip px-2.5 py-1.5 rounded-full bg-slate-900 text-white':'faq-chip px-2.5 py-1.5 rounded-full border border-slate-200';
+        });
+      }
+      document.querySelectorAll('.faq-chip').forEach(b=>b.addEventListener('click',()=>highlight(+b.dataset.faq)));
+      document.querySelectorAll('#faq details').forEach((d,idx)=>d.addEventListener('toggle',()=>{ if(d.open) highlight(idx); }));
+      highlight(0);
+      let vis=true; new IntersectionObserver(e=>vis=e[0].isIntersecting,{threshold:0.05}).observe(wrap);
+      (function loop(){ requestAnimationFrame(loop); if(!vis) return; if(!reduced) pivot.rotation.y+=0.003; controls.update(); renderer.render(scene,camera); })();
+    })();
   </script>
 </body>
 </html>
